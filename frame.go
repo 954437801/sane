@@ -17,8 +17,8 @@ type Frame struct {
 	Channels     int    // number of channels
 	Depth        int    // bits per sample
 	IsLast       bool   // whether this is the last frame
-	bytesPerLine int    // bytes per line, including any padding
-	data         []byte // raw data
+	BytesPerLine int    // bytes per line, including any padding
+	Data         []byte // raw data
 }
 
 // ReadFrame reads and returns a whole frame.
