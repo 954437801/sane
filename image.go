@@ -87,7 +87,11 @@ func (m *Image) At(x, y int) color.Color {
 
 // ReadImage reads an image from the connection.
 func (c *Conn) ReadImage() (*Image, error) {
-	defer c.Cancel()
+	defer func() {
+		if err != nil {
+			c.Cancel()
+		}
+	}
 
 	m := Image{}
 	for {
