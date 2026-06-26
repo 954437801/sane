@@ -86,17 +86,13 @@ func (m *Image) At(x, y int) color.Color {
 }
 
 // ReadImage reads an image from the connection.
+// Only calls Cancel if an error occurs, to support ADF multi-page scanning.
 func (c *Conn) ReadImage() (*Image, error) {
-	defer func() {
-		if err != nil {
-			c.Cancel()
-		}
-	}
-
 	m := Image{}
 	for {
 		f, err := c.ReadFrame()
 		if err != nil {
+			c.Cancel()
 			return nil, err
 		}
 		switch f.Format {

@@ -58,8 +58,8 @@ func (c *Conn) ReadFrame() (*Frame, error) {
 		Channels:     nch,
 		Depth:        p.Depth,
 		IsLast:       p.IsLast,
-		bytesPerLine: p.BytesPerLine,
-		data:         data.Bytes()}, nil
+		BytesPerLine: p.BytesPerLine,
+		Data:         data.Bytes()}, nil
 }
 
 // At returns the sample at coordinates (x,y) for channel ch.
@@ -68,19 +68,19 @@ func (c *Conn) ReadFrame() (*Frame, error) {
 func (f *Frame) At(x, y, ch int) uint16 {
 	switch f.Depth {
 	case 1:
-		i := f.bytesPerLine*y + f.Channels*(x/8) + ch
-		s := (f.data[i] >> uint8(x%8)) & 0x01
+		i := f.BytesPerLine*y + f.Channels*(x/8) + ch
+		s := (f.Data[i] >> uint8(x%8)) & 0x01
 		if f.Format == FrameGray {
 			// For B&W lineart, 0 is white and 1 is black
 			return uint16(s ^ 0x1)
 		}
 		return uint16(s)
 	case 8:
-		i := f.bytesPerLine*y + f.Channels*x + ch
-		return uint16(f.data[i])
+		i := f.BytesPerLine*y + f.Channels*x + ch
+		return uint16(f.Data[i])
 	case 16:
-		i := f.bytesPerLine*y + 2*(f.Channels*x+ch)
-		return uint16(f.data[i+1])<<8 + uint16(f.data[i])
+		i := f.BytesPerLine*y + 2*(f.Channels*x+ch)
+		return uint16(f.Data[i+1])<<8 + uint16(f.Data[i])
 	}
 	return 0
 }
